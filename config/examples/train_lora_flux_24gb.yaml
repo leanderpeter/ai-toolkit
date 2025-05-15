@@ -75,16 +75,16 @@ config:
         prompts:
           # you can add [trigger] to the prompts here and it will be replaced with the trigger word
 #          - "[trigger] holding a sign that says 'I LOVE PROMPTS!'"\
-          - "woman with red hair, playing chess at the park, bomb going off in the background"
-          - "a woman holding a coffee cup, in a beanie, sitting at a cafe"
-          - "a horse is a DJ at a night club, fish eye lens, smoke machine, lazer lights, holding a martini"
-          - "a man showing off his cool new t shirt at the beach, a shark is jumping out of the water in the background"
-          - "a bear building a log cabin in the snow covered mountains"
-          - "woman playing the guitar, on stage, singing a song, laser lights, punk rocker"
-          - "hipster man with a beard, building a chair, in a wood shop"
-          - "photo of a man, white background, medium shot, modeling clothing, studio lighting, white backdrop"
-          - "a man holding a sign that says, 'this is a sign'"
-          - "a bulldog, in a post apocalyptic world, with a shotgun, in a leather jacket, in a desert, with a motorcycle"
+          - "Leander standing shirtless on a rocky beach at sunset, water droplets on skin, looking away with intense gaze, warm golden light, soft shadows, toned body, cinematic mood"
+          - "Leander in a moody hotel room, lying on unmade bed with white sheets, tousled hair, morning light through blinds, bedroom eyes, intimate atmosphere"
+          - "Leander in black leather jacket at night, neon city lights in background, slicked-back hair, mysterious expression, jawline highlighted, cinematic noir vibe"
+          - "Leander in a dimly lit bathroom mirror, shirt off, fogged mirror from steam, towel around waist, abs visible, low key lighting, sensual pose"
+          - "Leander leaning against a bar with whiskey glass in hand, wearing fitted dark shirt, low lighting, seductive smile, confident posture, upscale lounge"
+          - "Leander climbing a boulder shirtless in golden hour, muscular arms flexed, rugged outdoors setting, dirt on hands, action freeze-frame"
+          - "Leander wearing open button-up shirt on a rooftop at dusk, city lights below, wind in hair, smirking slightly, hands in pockets, cool urban vibe"
+          - "Leander lit only by laptop screen glow at night, shirtless in bed, focused expression, side profile, minimalist techy setting"
+          - "Leander stepping out of a vintage sports car at night, wearing black suit with undone tie, dim streetlight casting long shadows, confident attitude"
+          - "Leander holding a dog leash shirtless in park, athletic jogger pants, casual walk, warm morning sun, urban nature contrast, toned and relaxed look"
         neg: ""  # not used on flux
         seed: 42
         walk_seed: true
