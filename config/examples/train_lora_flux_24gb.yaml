@@ -31,22 +31,22 @@ config:
         # images will automatically be resized and bucketed into the resolution specified
         # on windows, escape back slashes with another backslash so
         # "C:\\path\\to\\images\\folder"
-        - folder_path: "/path/to/images/folder"
+        - folder_path: "/home/ec2-user/leander"
           caption_ext: "txt"
           caption_dropout_rate: 0.05  # will drop out the caption 5% of time
           shuffle_tokens: false  # shuffle caption order, split by commas
           cache_latents_to_disk: true  # leave this true unless you know what you're doing
           resolution: [ 512, 768, 1024 ]  # flux enjoys multiple resolutions
       train:
-        batch_size: 1
-        steps: 2000  # total number of steps to train 500 - 4000 is a good range
+        batch_size: 2
+        steps: 2000
         gradient_accumulation_steps: 1
         train_unet: true
-        train_text_encoder: false  # probably won't work with flux
-        gradient_checkpointing: true  # need the on unless you have a ton of vram
-        noise_scheduler: "flowmatch" # for training only
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
         optimizer: "adamw8bit"
-        lr: 1e-4
+        lr: 2e-4
         # uncomment this to skip the pre training sample
 #        skip_first_sample: true
         # uncomment to completely disable sampling
