@@ -1,0 +1,80 @@
+---
+job: extension
+config:
+  name: "leander_dreamframe_v1"
+  process:
+    - type: 'sd_trainer'
+      training_folder: "output"
+      device: cuda:0
+      trigger_word: "leander"  # Added for consistency in prompt-token association
+      network:
+        type: "lora"
+        linear: 16
+        linear_alpha: 16
+      save:
+        dtype: float16
+        save_every: 250
+        max_step_saves_to_keep: 4
+        push_to_hub: false
+#       hf_repo_id: your-username/your-model-slug
+#       hf_private: true
+      datasets:
+        - folder_path: "/root/leander"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.05
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [512, 768, 1024]
+      train:
+        batch_size: 2
+        steps: 4000  # Increased for better fidelity
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: true  # ENABLED for sharper and better prompt learning
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw8bit"
+        lr: 2e-4
+#        skip_first_sample: true
+#        disable_sampling: true
+#        linear_timesteps: true
+        ema_config:
+          use_ema: true
+          ema_decay: 0.99
+        dtype: bf16
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-dev"
+        is_flux: true
+        quantize: true
+#        low_vram: true
+      sample:
+        sampler: "flowmatch"
+        sample_every: 250
+        width: 1024
+        height: 1024
+        prompts:
+          - "[leander] standing shirtless on a rocky beach at sunset, water droplets on skin, looking away with intense gaze, warm golden light, soft shadows, toned body, cinematic mood"
+          - "[leander] in a moody hotel room, lying on unmade bed with white sheets, tousled hair, morning light through blinds, bedroom eyes, intimate atmosphere"
+          - "[leander] in black leather jacket at night, neon city lights in background, slicked-back hair, mysterious expression, jawline highlighted, cinematic noir vibe"
+          - "[leander] in a dimly lit bathroom mirror, shirt off, fogged mirror from steam, towel around waist, abs visible, low key lighting, sensual pose"
+          - "[leander] leaning against a bar with whiskey glass in hand, wearing fitted dark shirt, low lighting, seductive smile, confident posture, upscale lounge"
+          - "[leander] climbing a boulder shirtless in golden hour, muscular arms flexed, rugged outdoors setting, dirt on hands, action freeze-frame"
+          - "[leander] wearing open button-up shirt on a rooftop at dusk, city lights below, wind in hair, smirking slightly, hands in pockets, cool urban vibe"
+          - "[leander] lit only by laptop screen glow at night, shirtless in bed, focused expression, side profile, minimalist techy setting"
+          - "[leander] stepping out of a vintage sports car at night, wearing black suit with undone tie, dim streetlight casting long shadows, confident attitude"
+          - "[leander] holding a dog leash shirtless in park, athletic jogger pants, casual walk, warm morning sun, urban nature contrast, toned and relaxed look"
+          - "Leander caught mid-laugh in a kitchen party, harsh flash, red eyes, plastic cup in hand, messy table behind, retro-cam vibe"
+          - "Leander dancing in a crowded club, white flash overexposed background, sweat on shirt, disposable camera aesthetic"
+          - "Leander posing with two friends in a bathroom mirror, flash glare, red cup in hand, chaotic energy, 2000s party feel"
+          - "Leander sitting on a couch with a bottle of wine, legs crossed, direct flash making skin shiny, confetti in hair, film camera look"
+          - "Leander with flushed cheeks and a cigarette, looking dazed into camera, overexposed face, party chaos in background"
+          - "Leander standing in a hallway with techno posters, flash blowing out details, holding a drink, candid and raw"
+          - "Leander shirtless at a rave, strobe effect caught mid-frame, arms raised, expression intense, retro-grainy aesthetic"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 7.5  # Increased for sharper, more prompt-adherent images
+        sample_steps: 30     # Slightly longer diffusion for better detail
+meta:
+  name: "[name]"
+  version: '1.0'
