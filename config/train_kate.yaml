@@ -1,0 +1,79 @@
+---
+job: extension
+config:
+  name: "kate_dreamframe_v1"
+  process:
+    - type: 'sd_trainer'
+      training_folder: "output"
+      device: cuda:0
+      trigger_word: "kate"  # Added for consistency in prompt-token association
+      network:
+        type: "lora"
+        linear: 16
+        linear_alpha: 16
+      save:
+        dtype: float16
+        save_every: 250
+        max_step_saves_to_keep: 4
+        push_to_hub: false
+#       hf_repo_id: your-username/your-model-slug
+#       hf_private: true
+      datasets:
+        - folder_path: "/workspace/kate"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.05
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [512, 768, 1024]
+      train:
+        batch_size: 2
+        steps: 4000  # Increased for better fidelity
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: true  # ENABLED for sharper and better prompt learning
+        gradient_checkpointing: true
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw8bit"
+        lr: 2e-4
+#        skip_first_sample: true
+#        disable_sampling: true
+#        linear_timesteps: true
+        ema_config:
+          use_ema: true
+          ema_decay: 0.99
+        dtype: bf16
+      model:
+        name_or_path: "black-forest-labs/FLUX.1-dev"
+        is_flux: true
+        quantize: true
+#        low_vram: true
+      sample:
+        sampler: "flowmatch"
+        sample_every: 250
+        width: 1024
+        height: 1024
+        prompts:
+          - "[Kate] lying nude on crumpled linen sheets, back turned to camera, morning light pouring in, soft and serene mood"
+          - "[Kate] standing topless at a fogged-up window, silhouette visible through condensation, rain outside, melancholic and intimate"
+          - "[Kate] nude in a candle-lit bathroom, sitting on the edge of a tub, arms wrapped around knees, warm glow on wet skin"
+          - "[Kate] from behind, wearing nothing but an unbuttoned men’s shirt, walking barefoot down a hallway, backlight outlining curves"
+          - "[Kate] nude under a white bedsheet, only shoulder and thigh exposed, head resting on pillow, dreamy golden hour"
+          - "[Kate] topless, lying sideways on a couch, long hair covering her chest, eyes closed, vintage film grain effect"
+          - "[Kate] standing nude in front of an open fridge at night, light illuminating body contours, playful and surreal moment"
+          - "[Kate] sitting cross-legged on the floor, nude, only wearing chunky jewelry, moody shadows and warm spotlight"
+          - "[Kate] lying on her stomach at the beach at night, moonlight casting soft blue tones on bare back, waves in background"
+          - "[Kate] standing nude in a field of tall grass, back to camera, wind moving hair, natural and wild energy"
+          - "[Kate] lying on white bedsheets in soft morning light, wearing an oversized shirt slipping off one shoulder, tousled hair, natural intimacy"
+          - "[Kate] standing in front of a mirror in black lingerie, looking over her shoulder, moody lighting, hotel room ambiance, elegant sensuality"
+          - "[Kate] wet from a shower, wrapped in a towel, foggy mirror behind her, soft steam rising, candid moment"
+          - "[Kate] in a silk slip dress, barefoot in a kitchen at night, pouring a glass of wine, lit by fridge light only, casual seduction"
+          - "[Kate] straddling a chair backwards in a dark room, red backlight, shadow-play on skin, intense eyes toward camera"
+          - "[Kate] dancing slowly alone under colored lights, sheer dress flowing, club ambiance, flash catches glint in her eyes"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 7.5  # Increased for sharper, more prompt-adherent images
+        sample_steps: 30     # Slightly longer diffusion for better detail
+meta:
+  name: "[name]"
+  version: '1.0'
