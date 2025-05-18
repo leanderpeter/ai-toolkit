@@ -1,4 +1,3 @@
----
 job: generate
 config:
   name: "generate_with_lora"
@@ -6,16 +5,17 @@ config:
     - type: to_folder
       output_folder: "output/generated_images"
       device: cuda:0
+
       generate:
-        sampler: "flowmatch"  # Use flowmatch sampler for FLUX models
+        sampler: "flowmatch"  # Used for FLUX models
         width: 1024
         height: 1024
-        neg: ""  # Negative prompt (empty for FLUX)
-        seed: 42  # Fixed seed, use -1 for random seeds
-        guidance_scale: 4  # 4 for FLUX.1-dev, 1 for FLUX.1-schnell
-        sample_steps: 20  # 20 for FLUX.1-dev, 4 for FLUX.1-schnell
+        neg: ""  # Leave empty for FLUX
+        seed: 42
+        guidance_scale: 4
+        sample_steps: 20
         ext: "png"
-        prompt_file: true  # Save prompts alongside images
+        prompt_file: true
         prompts:
           - "[Leander] standing shirtless on a rocky beach at sunset, water droplets on skin, looking away with intense gaze, warm golden light, soft shadows, toned body, cinematic mood"
           - "[Leander] in a moody hotel room, lying on unmade bed with white sheets, tousled hair, morning light through blinds, bedroom eyes, intimate atmosphere"
@@ -67,10 +67,9 @@ config:
           - "[Leander] serving drinks to friends at house party, glowing lights, social and open"
           - "[Leander] looking into mirror with serious face, applying cologne, intimate pre-date moment"
           - "[Leander] holding hands with someone off-frame, walking through forest path, subtle romance"
-
       model:
-        name_or_path: "black-forest-labs/FLUX.1-dev"  # Base model
-        is_flux: true  # Specify that it's a FLUX model
-        lora_path: "./output/leander_dreamframe_v1/model_lora_weights.safetensors"
-        quantize: true  # Use quantization to save VRAM
-        dtype: bf16  # Use bf16 for FLUX models 
+        name_or_path: "black-forest-labs/FLUX.1-dev"
+        is_flux: true
+        lora_path: "output/leander_dreamframe_v1/model_lora_weights.safetensors"  # ✅ relative path to avoid HF lookup
+        quantize: true
+        dtype: bf16
