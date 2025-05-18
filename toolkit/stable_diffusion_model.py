@@ -736,9 +736,10 @@ class StableDiffusion:
                     # need the pipe to do this unfortunately for now
                     # we have to fuse in the weights before quantizing
                     pipe.load_lora_weights(
-                        self.model_config.lora_path,
+                        pretrained_model_name_or_path=self.model_config.lora_path,
                         adapter_name="lora1",
-                        local_files_only=True  # Forces diffusers to treat it as a local file, not a HF repo
+                        local_files_only=True,
+                        weight_name="model_lora_weights.safetensors"
                     )
                     pipe.fuse_lora()
                     # unfortunately, not an easier way with peft
