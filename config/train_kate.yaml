@@ -54,10 +54,6 @@ config:
         height: 1024
         prompts:
           - "[Kate] lying nude on crumpled linen sheets, back turned to camera, morning light pouring in, soft and serene mood"
-          - "[Kate] standing topless at a fogged-up window, silhouette visible through condensation, rain outside, melancholic and intimate"
-          - "[Kate] nude in a candle-lit bathroom, sitting on the edge of a tub, arms wrapped around knees, warm glow on wet skin"
-          - "[Kate] wet from a shower, wrapped in a towel, foggy mirror behind her, soft steam rising, candid moment"
-          - "[Kate] in a silk slip dress, barefoot in a kitchen at night, pouring a glass of wine, lit by fridge light only, casual seduction"
           - "[Kate] dancing slowly alone under colored lights, sheer dress flowing, club ambiance, flash catches glint in her eyes"
           - "[Kate] posing confidently on a rooftop at sunset, wearing a beige trench coat and sunglasses, wind in her hair, skyline in background, polished Instagram aesthetic"
           - "[Kate] sipping matcha at a stylish café, wearing neutral-toned outfit, gold jewelry, soft natural light, holding phone in one hand"
