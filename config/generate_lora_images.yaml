@@ -71,6 +71,6 @@ config:
       model:
         name_or_path: "black-forest-labs/FLUX.1-dev"  # Base model
         is_flux: true  # Specify that it's a FLUX model
-        lora_path: "/workspace/ai-toolkit/output/my_first_flux_lora_v1/model_lora_weights.safetensors"  # Absolute path to your LoRA weights
+        lora_path: "./output/leander_dreamframe_v1/model_lora_weights.safetensors"
         quantize: true  # Use quantization to save VRAM
         dtype: bf16  # Use bf16 for FLUX models 
