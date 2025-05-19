@@ -23,7 +23,7 @@ output_path = os.path.join(output_dir, filename)
 # Load base model and local LoRA weights
 pipe = DiffusionPipeline.from_pretrained("black-forest-labs/FLUX.1-dev", torch_dtype=torch.bfloat16)
 pipe = pipe.to(device)
-pipe.load_lora_weights(".", weight_name="me_flux_lora_v1.safetensors")  # Assumes weights are in current folder
+pipe.load_lora_weights(".", weight_name="/output/leander_dreamframe_v1/leander_dreamframe_v1.safetensors")  # Assumes weights are in current folder
 
 # Generate
 generator = torch.Generator(device="cpu").manual_seed(seed)
