@@ -1,9 +1,20 @@
-import torch
-from diffusers import DiffusionPipeline
 import os
 import re
+import torch
+from diffusers import DiffusionPipeline
+from huggingface_hub import login
+from dotenv import load_dotenv
 
-# Config
+# --- Load environment ---
+load_dotenv()
+hf_token = os.getenv("HF_TOKEN")
+
+if not hf_token:
+    raise ValueError("❌ Hugging Face token not found in .env file.")
+
+login(token=hf_token)
+
+# --- Config ---
 device = "cuda" if torch.cuda.is_available() else "cpu"
 prompt = "close-up portrait of a confident man with cinematic lighting, sharp details, moody background"
 output_dir = "./outputs"
@@ -13,19 +24,26 @@ height = 1024
 width = 1024
 seed = 0
 
-# Clean prompt to use in filename
+# --- Generate filename from prompt ---
 def sanitize_filename(prompt_text):
     return re.sub(r'[^a-zA-Z0-9]+', '_', prompt_text.strip())[:60].strip("_")
 
 filename = f"{sanitize_filename(prompt)}.png"
 output_path = os.path.join(output_dir, filename)
 
-# Load base model and local LoRA weights
-pipe = DiffusionPipeline.from_pretrained("black-forest-labs/FLUX.1-dev", torch_dtype=torch.bfloat16)
+# --- Load pipeline ---
+pipe = DiffusionPipeline.from_pretrained(
+    "black-forest-labs/FLUX.1-dev",
+    torch_dtype=torch.bfloat16
+)
 pipe = pipe.to(device)
-pipe.load_lora_weights(".", weight_name="/output/leander_dreamframe_v1/leander_dreamframe_v1.safetensors")  # Assumes weights are in current folder
 
-# Generate
+pipe.load_lora_weights(
+    "./output/leander_dreamframe_v1",  # local path
+    weight_name="leander_dreamframe_v1.safetensors"
+)
+
+# --- Generate image ---
 generator = torch.Generator(device="cpu").manual_seed(seed)
 image = pipe(
     prompt,
@@ -37,7 +55,7 @@ image = pipe(
     generator=generator
 ).images[0]
 
-# Save output
+# --- Save result ---
 os.makedirs(output_dir, exist_ok=True)
 image.save(output_path)
 print(f"✅ Image saved at: {os.path.abspath(output_path)}")
