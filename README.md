@@ -93,21 +93,17 @@ _Last updated: 2025-04-22 16:45 UTC_
 
 ---
 
-
-
-
-
-
 ## Installation
 
 Requirements:
+
 - python >3.10
 - Nvidia GPU with enough ram to do what you need
 - python venv
 - git
 
-
 Linux:
+
 ```bash
 git clone https://github.com/ostris/ai-toolkit.git
 cd ai-toolkit
@@ -119,6 +115,7 @@ pip3 install -r requirements.txt
 ```
 
 Windows:
+
 ```bash
 git clone https://github.com/ostris/ai-toolkit.git
 cd ai-toolkit
@@ -127,7 +124,6 @@ python -m venv venv
 pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
 ```
-
 
 # AI Toolkit UI
 
@@ -138,10 +134,11 @@ The AI Toolkit UI is a web interface for the AI Toolkit. It allows you to easily
 ## Running the UI
 
 Requirements:
+
 - Node.js > 18
 
 The UI does not need to be kept running for the jobs to run. It is only needed to start/stop/monitor jobs. The commands below
-will install / update the UI and it's dependencies and start the UI. 
+will install / update the UI and it's dependencies and start the UI.
 
 ```bash
 cd ui
@@ -152,7 +149,7 @@ You can now access the UI at `http://localhost:8675` or `http://<your-ip>:8675` 
 
 ## Securing the UI
 
-If you are hosting the UI on a cloud provider or any network that is not secure, I highly recommend securing it with an auth token. 
+If you are hosting the UI on a cloud provider or any network that is not secure, I highly recommend securing it with an auth token.
 You can do this by setting the environment variable `AI_TOOLKIT_AUTH` to super secure password. This token will be required to access
 the UI. You can set this when starting the UI like so:
 
@@ -167,21 +164,20 @@ set AI_TOOLKIT_AUTH=super_secure_password && npm run build_and_start
 $env:AI_TOOLKIT_AUTH="super_secure_password"; npm run build_and_start
 ```
 
-
 ## FLUX.1 Training
 
 ### Tutorial
 
 To get started quickly, check out [@araminta_k](https://x.com/araminta_k) tutorial on [Finetuning Flux Dev on a 3090](https://www.youtube.com/watch?v=HzGW_Kyermg) with 24GB VRAM.
 
-
 ### Requirements
-You currently need a GPU with **at least 24GB of VRAM** to train FLUX.1. If you are using it as your GPU to control 
+
+You currently need a GPU with **at least 24GB of VRAM** to train FLUX.1. If you are using it as your GPU to control
 your monitors, you probably need to set the flag `low_vram: true` in the config file under `model:`. This will quantize
 the model on CPU and should allow it to train with monitors attached. Users have gotten it to work on Windows with WSL,
-but there are some reports of a bug when running on windows natively. 
+but there are some reports of a bug when running on windows natively.
 I have only tested on linux for now. This is still extremely experimental
-and a lot of quantizing and tricks had to happen to get it to fit on 24GB at all. 
+and a lot of quantizing and tricks had to happen to get it to fit on 24GB at all.
 
 ### FLUX.1-dev
 
@@ -202,27 +198,28 @@ It is also highly experimental. For best overall quality, training on FLUX.1-dev
 To use it, You just need to add the assistant to the `model` section of your config file like so:
 
 ```yaml
-      model:
-        name_or_path: "black-forest-labs/FLUX.1-schnell"
-        assistant_lora_path: "ostris/FLUX.1-schnell-training-adapter"
-        is_flux: true
-        quantize: true
+model:
+  name_or_path: "black-forest-labs/FLUX.1-schnell"
+  assistant_lora_path: "ostris/FLUX.1-schnell-training-adapter"
+  is_flux: true
+  quantize: true
 ```
 
 You also need to adjust your sample steps since schnell does not require as many
 
 ```yaml
-      sample:
-        guidance_scale: 1  # schnell does not do guidance
-        sample_steps: 4  # 1 - 4 works well
+sample:
+  guidance_scale: 1 # schnell does not do guidance
+  sample_steps: 4 # 1 - 4 works well
 ```
 
 ### Training
+
 1. Copy the example config file located at `config/examples/train_lora_flux_24gb.yaml` (`config/examples/train_lora_flux_schnell_24gb.yaml` for schnell) to the `config` folder and rename it to `whatever_you_want.yml`
 2. Edit the file following the comments in the file
 3. Run the file like so `python run.py config/whatever_you_want.yml`
 
-A folder with the name and the training folder from the config file will be created when you start. It will have all 
+A folder with the name and the training folder from the config file will be created when you start. It will have all
 checkpoints and images in it. You can stop the training at any time using ctrl+c and when you resume, it will pick back up
 from the last checkpoint.
 
@@ -247,21 +244,25 @@ python flux_train_ui.py
 You will instantiate a UI that will let you upload your images, caption them, train and publish your LoRA
 ![image](assets/lora_ease_ui.png)
 
-
 ## Training in RunPod
+
 Example RunPod template: **runpod/pytorch:2.2.0-py3.10-cuda12.1.1-devel-ubuntu22.04**
+
 > You need a minimum of 24GB VRAM, pick a GPU by your preference.
 
 #### Example config ($0.5/hr):
+
 - 1x A40 (48 GB VRAM)
 - 19 vCPU 100 GB RAM
 
 #### Custom overrides (you need some storage to clone FLUX.1, store datasets, store trained models and samples):
+
 - ~120 GB Disk
 - ~120 GB Pod Volume
 - Start Jupyter Notebook
 
 ### 1. Setup
+
 ```
 git clone https://github.com/ostris/ai-toolkit.git
 cd ai-toolkit
@@ -272,27 +273,34 @@ pip install torch
 pip install -r requirements.txt
 pip install --upgrade accelerate transformers diffusers huggingface_hub #Optional, run it if you run into issues
 ```
+
 ### 2. Upload your dataset
+
 - Create a new folder in the root, name it `dataset` or whatever you like.
 - Drag and drop your .jpg, .jpeg, or .png images and .txt files inside the newly created dataset folder.
 
 ### 3. Login into Hugging Face with an Access Token
+
 - Get a READ token from [here](https://huggingface.co/settings/tokens) and request access to Flux.1-dev model from [here](https://huggingface.co/black-forest-labs/FLUX.1-dev).
-- Run ```huggingface-cli login``` and paste your token.
+- Run `huggingface-cli login` and paste your token.
 
 ### 4. Training
-- Copy an example config file located at ```config/examples``` to the config folder and rename it to ```whatever_you_want.yml```.
+
+- Copy an example config file located at `config/examples` to the config folder and rename it to `whatever_you_want.yml`.
 - Edit the config following the comments in the file.
-- Change ```folder_path: "/path/to/images/folder"``` to your dataset path like ```folder_path: "/workspace/ai-toolkit/your-dataset"```.
-- Run the file: ```python run.py config/whatever_you_want.yml```.
+- Change `folder_path: "/path/to/images/folder"` to your dataset path like `folder_path: "/workspace/ai-toolkit/your-dataset"`.
+- Run the file: `python run.py config/whatever_you_want.yml`.
 
 ### Screenshot from RunPod
+
 <img width="1728" alt="RunPod Training Screenshot" src="https://github.com/user-attachments/assets/53a1b8ef-92fa-4481-81a7-bde45a14a7b5">
 
 ## Training in Modal
 
 ### 1. Setup
+
 #### ai-toolkit:
+
 ```
 git clone https://github.com/ostris/ai-toolkit.git
 cd ai-toolkit
@@ -303,36 +311,45 @@ pip install torch
 pip install -r requirements.txt
 pip install --upgrade accelerate transformers diffusers huggingface_hub #Optional, run it if you run into issues
 ```
+
 #### Modal:
+
 - Run `pip install modal` to install the modal Python package.
 - Run `modal setup` to authenticate (if this doesn’t work, try `python -m modal setup`).
 
 #### Hugging Face:
+
 - Get a READ token from [here](https://huggingface.co/settings/tokens) and request access to Flux.1-dev model from [here](https://huggingface.co/black-forest-labs/FLUX.1-dev).
 - Run `huggingface-cli login` and paste your token.
 
 ### 2. Upload your dataset
+
 - Drag and drop your dataset folder containing the .jpg, .jpeg, or .png images and .txt files in `ai-toolkit`.
 
 ### 3. Configs
-- Copy an example config file located at ```config/examples/modal``` to the `config` folder and rename it to ```whatever_you_want.yml```.
+
+- Copy an example config file located at `config/examples/modal` to the `config` folder and rename it to `whatever_you_want.yml`.
 - Edit the config following the comments in the file, **<ins>be careful and follow the example `/root/ai-toolkit` paths</ins>**.
 
 ### 4. Edit run_modal.py
+
 - Set your entire local `ai-toolkit` path at `code_mount = modal.Mount.from_local_dir` like:
-  
-   ```
-   code_mount = modal.Mount.from_local_dir("/Users/username/ai-toolkit", remote_path="/root/ai-toolkit")
-   ```
+
+  ```
+  code_mount = modal.Mount.from_local_dir("/Users/username/ai-toolkit", remote_path="/root/ai-toolkit")
+  ```
+
 - Choose a `GPU` and `Timeout` in `@app.function` _(default is A100 40GB and 2 hour timeout)_.
 
 ### 5. Training
+
 - Run the config file in your terminal: `modal run run_modal.py --config-file-list-str=/root/ai-toolkit/config/whatever_you_want.yml`.
 - You can monitor your training in your local terminal, or on [modal.com](https://modal.com/).
 - Models, samples and optimizer will be stored in `Storage > flux-lora-models`.
 
 ### 6. Saving the model
-- Check contents of the volume by running `modal volume ls flux-lora-models`. 
+
+- Check contents of the volume by running `modal volume ls flux-lora-models`.
 - Download the content by running `modal volume get flux-lora-models your-model-name`.
 - Example: `modal volume get flux-lora-models my_first_flux_lora_v1`.
 
@@ -348,11 +365,10 @@ Datasets generally need to be a folder containing images and associated text fil
 formats are jpg, jpeg, and png. Webp currently has issues. The text files should be named the same as the images
 but with a `.txt` extension. For example `image2.jpg` and `image2.txt`. The text file should contain only the caption.
 You can add the word `[trigger]` in the caption file and if you have `trigger_word` in your config, it will be automatically
-replaced. 
+replaced.
 
 Images are never upscaled but they are downscaled and placed in buckets for batching. **You do not need to crop/resize your images**.
-The loader will automatically resize them and can handle varying aspect ratios. 
-
+The loader will automatically resize them and can handle varying aspect ratios.
 
 ## Training Specific Layers
 
@@ -361,41 +377,40 @@ used by The Last Ben, [mentioned in this post](https://x.com/__TheBen/status/182
 network kwargs like so:
 
 ```yaml
-      network:
-        type: "lora"
-        linear: 128
-        linear_alpha: 128
-        network_kwargs:
-          only_if_contains:
-            - "transformer.single_transformer_blocks.7.proj_out"
-            - "transformer.single_transformer_blocks.20.proj_out"
+network:
+  type: "lora"
+  linear: 128
+  linear_alpha: 128
+  network_kwargs:
+    only_if_contains:
+      - "transformer.single_transformer_blocks.7.proj_out"
+      - "transformer.single_transformer_blocks.20.proj_out"
 ```
 
-The naming conventions of the layers are in diffusers format, so checking the state dict of a model will reveal 
+The naming conventions of the layers are in diffusers format, so checking the state dict of a model will reveal
 the suffix of the name of the layers you want to train. You can also use this method to only train specific groups of weights.
 For instance to only train the `single_transformer` for FLUX.1, you can use the following:
 
 ```yaml
-      network:
-        type: "lora"
-        linear: 128
-        linear_alpha: 128
-        network_kwargs:
-          only_if_contains:
-            - "transformer.single_transformer_blocks."
+network:
+  type: "lora"
+  linear: 128
+  linear_alpha: 128
+  network_kwargs:
+    only_if_contains:
+      - "transformer.single_transformer_blocks."
 ```
 
 You can also exclude layers by their names by using `ignore_if_contains` network kwarg. So to exclude all the single transformer blocks,
 
-
 ```yaml
-      network:
-        type: "lora"
-        linear: 128
-        linear_alpha: 128
-        network_kwargs:
-          ignore_if_contains:
-            - "transformer.single_transformer_blocks."
+network:
+  type: "lora"
+  linear: 128
+  linear_alpha: 128
+  network_kwargs:
+    ignore_if_contains:
+      - "transformer.single_transformer_blocks."
 ```
 
 `ignore_if_contains` takes priority over `only_if_contains`. So if a weight is covered by both,
@@ -406,11 +421,31 @@ if will be ignored.
 To learn more about LoKr, read more about it at [KohakuBlueleaf/LyCORIS](https://github.com/KohakuBlueleaf/LyCORIS/blob/main/docs/Guidelines.md). To train a LoKr model, you can adjust the network type in the config file like so:
 
 ```yaml
-      network:
-        type: "lokr"
-        lokr_full_rank: true
-        lokr_factor: 8
+network:
+  type: "lokr"
+  lokr_full_rank: true
+  lokr_factor: 8
 ```
 
 Everything else should work the same including layer targeting.
 
+## Inference
+
+To generate images using a trained model, you can use the inference script. Here's an example command:
+
+```bash
+python inference.py \
+  --p prompts.txt \
+  --o output/ \
+  --model black-forest-labs/FLUX.1-dev \
+  --lora-dir ./output/leander_dreamframe_v1 \
+  --lora-weight leander_dreamframe_v1.safetensors
+```
+
+Arguments:
+
+- `--p`: Path to a text file containing prompts (one per line)
+- `--o`: Output directory for generated images
+- `--model`: Base model to use (e.g. FLUX.1-dev)
+- `--lora-dir`: Directory containing the LoRA weights
+- `--lora-weight`: Name of the specific LoRA weights file to use
